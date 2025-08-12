@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, SafeAreaView } from 'react-native';
 import { createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AddFriendPage from './pages/AddFriendPage';
 
 function HomeScreen() {
   const navigation = useNavigation();
@@ -18,7 +19,13 @@ function HomeScreen() {
 const RootStack = createNativeStackNavigator({
   screens: {
     Home: HomeScreen,
-    
+    AddFriendPage: {
+      screen: AddFriendPage,
+      options: {
+        title: 'Add your friend'
+      }
+    }
+
   },
 });
 

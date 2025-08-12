@@ -82,7 +82,10 @@ export default function AddFriendPage() {
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: "center"
+        flex: 1,
+        backgroundColor: '#1a0966ff',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     input: {
         height: 40,

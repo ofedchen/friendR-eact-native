@@ -1,0 +1,246 @@
+/*
+[x] check how to save picture to json - as uri and use as source
+[] change buttons to Pressable and style them and make into components
+[] navigate to homescreen after saving
+[] move wishlist to friend page
+[] add required to input
+[] make picture round?
+[] check the labels
+*/
+
+import { useState } from "react";
+import { ActivityIndicator, Alert, Button, Image, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import * as ImagePicker from 'expo-image-picker';
+
+const SERVER_URL = 'http://192.168.1.134:3000/friends';
+
+export default function AddFriendPage() {
+
+    const [friendName, setFriendName] = useState(null);
+    const [address, setAddress] = useState(null);
+    const [birthday, setBirthday] = useState(null);
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    const [image, setImage] = useState(null);
+    const [imageBase64, setImageBase64] = useState(null);
+    const [wishlist, setWishlist] = useState([]);
+    const [wishlistItem, setWishlistItem] = useState(null);
+    const [loading, setLoading] = useState(false)
+
+    // image picker
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+            base64: true,
+        });
+
+        console.log(result);
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+            setImageBase64(result.assets[0].base64);
+        }
+    };
+
+    // add to wishlist
+    const addWishlistItem = async () => {
+        if (wishlistItem.trim()) {
+            setWishlist([...wishlist, wishlistItem.trim()]);
+            setWishlistItem('')
+        }
+    }
+
+    // DatePicker for choosing birthday
+    const onChange = (event, selectedDate) => {
+        setShow(false);
+        setBirthday(selectedDate);
+    };
+
+    const showMode = (currentMode) => {
+        setShow(true);
+        setMode(currentMode);
+    };
+
+    const showDatepicker = () => {
+        showMode('date');
+    };
+
+    //saving to db
+    const saveFriend = async () => {
+        if (!friendName || !address || !birthday) {
+            Alert.alert("Please fill all fields and pick an image.");
+            return;
+        }
+
+        setLoading(true);
+
+        const friendData = {
+            name: friendName,
+            address,
+            birthday: birthday.toISOString(),
+            wishlist,
+            image: imageBase64
+        }
+
+        try {
+            const response = await fetch(SERVER_URL, {
+                method: 'POST',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify(friendData)
+            })
+
+            if (response.ok) {
+                Alert.alert("Friend saved!");
+                setFriendName(null);
+                setAddress(null);
+                setBirthday(null);
+                setImage(null);
+                setImageBase64(null);
+                setWishlist(null)
+            } else {
+                Alert.alert("Failed to save friend.");
+            }
+
+        } catch (error) {
+            Alert.alert("Error: ", error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardAvoidingView} keyboardVerticalOffset={80}>
+                <ScrollView contentContainerStyle={styles.form}>
+                    {image && <Image source={{ uri: image }} style={styles.image} />}
+                    <Button title={image ? "Change image" : "Pick an image from camera roll"} onPress={pickImage} />
+                    <Text accessibilityLabel="Label for Friend Name" style={styles.h3}>Name</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setFriendName}
+                        value={friendName}
+                    />
+                    <Text accessibilityLabel="Label for Address" style={styles.h3}>Address</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setAddress}
+                        value={address}
+                        placeholder="fill in address"
+                        placeholderTextColor="#fff"
+                    />
+                    <Text accessibilityLabel="Label for Birthday" style={styles.h3}>Birthday</Text>
+                    {birthday && <Text style={styles.text}>selected: {birthday ? birthday.toLocaleDateString("en-GB") : ""}</Text>}
+                    <Button onPress={showDatepicker} title={birthday ? "Change" : "Show date picker!"} />
+
+                    {show && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={birthday || new Date()}
+                            mode={mode}
+                            is24Hour={true}
+                            onChange={onChange}
+                        />
+                    )}
+                    <Text accessibilityLabel="Label for Wishlist items" style={styles.h3}>Wishlist</Text>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={setWishlistItem}
+                            value={wishlistItem}
+                            placeholder="add a wishlist item"
+                            placeholderTextColor="#fff"
+                        />
+                    </TouchableWithoutFeedback>
+                    <Button title="Add to wishlist" onPress={addWishlistItem} />
+                    {wishlist && wishlist.map(item => <Text key={item} style={styles.wishlist}>{item}</Text>)}
+                    {loading ? (
+                        <ActivityIndicator size="large" color="#c65fcfff" style={{ margin: 10 }} />
+                    ) : (
+                        <View style={styles.saveButton}>
+                            {/* style={styles[primary ? "saveButton" : "whatever"]} */}
+                            <Button title="Save Friend" onPress={saveFriend} color="#1a0966ff" />
+                        </View>
+                    )}
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </SafeAreaView >
+    )
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#f5f6fa',
+    },
+    keyboardAvoidingView: {
+        flex: 1
+    },
+    scrollView: {
+        flexGrow: 1,
+    },
+    form: {
+        alignItems: 'center',
+        padding: 24,
+        paddingBottom: 40
+    },
+    image: {
+        width: 180,
+        height: 180,
+        borderRadius: 12,
+        marginVertical: 16,
+        backgroundColor: '#e1e1e1',
+    },
+    h3: {
+        color: '#2d2d2d',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 18,
+        marginBottom: 6,
+        alignSelf: 'flex-start',
+    },
+    input: {
+        height: 44,
+        width: '100%',
+        maxWidth: 320,
+        marginBottom: 12,
+        borderWidth: 1,
+        borderColor: "#d1d1d1",
+        borderRadius: 8,
+        paddingHorizontal: 12,
+        backgroundColor: "#fff",
+        color: "#2d2d2d",
+        fontSize: 16,
+    },
+    // inner: {
+    //     padding: 24,
+    //     flex: 1,
+    //     // justifyContent: 'space-around',
+    // },
+    text: {
+        color: "#444",
+        marginBottom: 8,
+        alignSelf: 'flex-start',
+    },
+    wishlist: {
+        color: "#1e5270ff",
+        fontSize: 16,
+        backgroundColor: "#d4e7f3ff",
+        padding: 8,
+        borderRadius: 6,
+        marginVertical: 4,
+        alignSelf: 'flex-start',
+        width: '100%',
+        maxWidth: 320,
+    },
+    saveButton: {
+        marginVertical: 10,
+        width: '100%',
+        maxWidth: 320,
+        borderRadius: 8,
+        overflow: 'hidden',
+    },
+});

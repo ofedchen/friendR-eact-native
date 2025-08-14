@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, SafeAreaView } from 'react-native';
 import { createStaticNavigation, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AddFriendPage from './pages/AddFriendPage';
+import AddFriendPage from './screens/AddFriendPage';
 
 function HomeScreen() {
   const navigation = useNavigation();

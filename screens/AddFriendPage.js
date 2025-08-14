@@ -12,10 +12,15 @@ import { useState } from "react";
 import { ActivityIndicator, Alert, Button, Image, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from "@react-navigation/native";
 
-const SERVER_URL = 'http://192.168.1.134:3000/friends';
+// const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
+const SERVER_URL = 'http://192.168.1.57:3000/friends'; //school
+
 
 export default function AddFriendPage() {
+
+    const navigation = useNavigation();
 
     const [friendName, setFriendName] = useState(null);
     const [address, setAddress] = useState(null);
@@ -109,6 +114,7 @@ export default function AddFriendPage() {
             Alert.alert("Error: ", error.message);
         } finally {
             setLoading(false);
+            navigation.navigate('Home')
         }
     }
 
@@ -215,11 +221,6 @@ const styles = StyleSheet.create({
         color: "#2d2d2d",
         fontSize: 16,
     },
-    // inner: {
-    //     padding: 24,
-    //     flex: 1,
-    //     // justifyContent: 'space-around',
-    // },
     text: {
         color: "#444",
         marginBottom: 8,

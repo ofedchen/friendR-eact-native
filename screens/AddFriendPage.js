@@ -8,14 +8,15 @@
 */
 
 import { useState } from "react";
-import { ActivityIndicator, Alert, Image, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback } from "react-native";
+import { ActivityIndicator, Alert, Image, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "@react-navigation/native";
+import { Divider } from "react-native-paper";
 import StyledButton from "../components/StyledButton";
 
-// const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
-const SERVER_URL = 'http://192.168.1.57:3000/friends'; //school
+const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
+// const SERVER_URL = 'http://192.168.1.57:3000/friends'; //school
 
 
 export default function AddFriendPage() {
@@ -105,7 +106,7 @@ export default function AddFriendPage() {
                 setBirthday(null);
                 setImage(null);
                 setImageBase64(null);
-                setWishlist(null)
+                setWishlist([])
             } else {
                 Alert.alert("Failed to save friend.");
             }
@@ -126,21 +127,23 @@ export default function AddFriendPage() {
                     <StyledButton iconName="camera" title={image ? "Change image" : "Pick an image from camera roll"} onPress={pickImage} primary={false} />
                     <Text accessibilityLabel="Label for Friend Name" style={styles.h3}>Name</Text>
                     <TextInput
+                        label="Name"
                         style={styles.input}
                         onChangeText={setFriendName}
                         value={friendName}
+                        placeholder="Anna"
                     />
                     <Text accessibilityLabel="Label for Address" style={styles.h3}>Address</Text>
                     <TextInput
                         style={styles.input}
                         onChangeText={setAddress}
                         value={address}
-                        placeholder="fill in address"
-                        placeholderTextColor="#fff"
+                        placeholder="Spain, Alicante, Calle Dr Sapena 4"
+                    // placeholderTextColor="#fff"
                     />
                     <Text accessibilityLabel="Label for Birthday" style={styles.h3}>Birthday</Text>
                     {birthday && <Text style={styles.text}>selected: {birthday ? birthday.toLocaleDateString("en-GB") : ""}</Text>}
-                    <StyledButton onPress={showDatepicker} title={birthday ? "Change" : "Show date picker!"} primary={false} />
+                    <StyledButton iconName="calendar-month" onPress={showDatepicker} title={birthday ? "Change date" : "Show date picker"} primary={false} />
 
                     {show && (
                         <DateTimePicker
@@ -157,12 +160,12 @@ export default function AddFriendPage() {
                             style={styles.input}
                             onChangeText={setWishlistItem}
                             value={wishlistItem}
-                            placeholder="add a wishlist item"
-                            placeholderTextColor="#fff"
+                            placeholder="Kiehl's moisturizer"
+                        // placeholderTextColor="#fff"
                         />
                     </TouchableWithoutFeedback>
                     <StyledButton title="Add to wishlist" onPress={addWishlistItem} primary={false} />
-                    {wishlist && wishlist.map(item => <Text key={item} style={styles.wishlist}>{item}</Text>)}
+                    {wishlist && wishlist.map(item => (<View key={item} style={styles.wishlist}><Text>{item}</Text><Divider /></View>))}
                     {loading ? (
                         <ActivityIndicator size="large" color="#c65fcfff" style={{ margin: 10 }} />
                     ) : (
@@ -177,7 +180,7 @@ export default function AddFriendPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f6fa',
+        // backgroundColor: '#f5f6fa',
     },
     keyboardAvoidingView: {
         flex: 1
@@ -195,10 +198,9 @@ const styles = StyleSheet.create({
         height: 180,
         borderRadius: 12,
         marginVertical: 16,
-        backgroundColor: '#e1e1e1',
+        // backgroundColor: '#e1e1e1',
     },
     h3: {
-        color: '#2d2d2d',
         fontSize: 18,
         fontWeight: 'bold',
         marginTop: 18,
@@ -211,22 +213,21 @@ const styles = StyleSheet.create({
         maxWidth: 320,
         marginBottom: 12,
         borderWidth: 1,
-        borderColor: "#d1d1d1",
+        borderColor: '#B0BEC5',
         borderRadius: 8,
         paddingHorizontal: 12,
-        backgroundColor: "#fff",
-        color: "#2d2d2d",
+        backgroundColor: '#FFFFFF',
         fontSize: 16,
     },
     text: {
-        color: "#444",
+        // color: "#444",
         marginBottom: 8,
         alignSelf: 'flex-start',
     },
     wishlist: {
-        color: "#1e5270ff",
+        // color: "#1e5270ff",
         fontSize: 16,
-        backgroundColor: "#d4e7f3ff",
+        // backgroundColor: "#d4e7f3ff",
         padding: 8,
         borderRadius: 6,
         marginVertical: 4,

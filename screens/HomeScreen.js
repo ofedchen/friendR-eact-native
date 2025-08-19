@@ -23,7 +23,7 @@ export default function HomeScreen() {
     return (
         <SafeAreaView style={styles.container} >
             <Text style={styles.h1}>Friend database</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={true} style={{maxHeight: 280, paddingTop: 10, paddingBottom: 30, marginBottom: 30}}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={true} style={{ maxHeight: 280, paddingTop: 10, paddingBottom: 30, marginBottom: 30 }}>
                 {friends.map((item) => (
                     <View key={item.id} style={styles.friendCard}>
                         <Image source={{ uri: `data:image/png;base64,${item.image}` }} style={styles.image}></Image>
@@ -31,7 +31,7 @@ export default function HomeScreen() {
                     </View>
                 ))}
             </ScrollView>
-            <StyledButton onPress={() => navigation.navigate('AddFriendPage')} title='Add your friends' primary={true}/>
+            <StyledButton onPress={() => navigation.navigate('AddFriendPage')} title='Add your friends' primary={true} />
             <StatusBar style="auto" />
         </SafeAreaView>
     );
@@ -41,12 +41,12 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1a0966ff',
+        // backgroundColor: '#1a0966ff',
         alignItems: 'center',
         justifyContent: 'flex-start'
     },
     h1: {
-        color: '#fff',
+        color: '#1A0966',
         fontSize: 40,
         marginBlock: 20
     },
@@ -59,10 +59,10 @@ const styles = StyleSheet.create({
         height: 180,
         borderRadius: 12,
         marginVertical: 16,
-        backgroundColor: '#e1e1e1',
+        // backgroundColor: '#e1e1e1',
     },
     text: {
-        color: '#fff',
+        // color: '#fff',
         fontSize: 16,
         fontWeight: 600
     }

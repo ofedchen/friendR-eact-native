@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Button, Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import StyledButton from '../components/StyledButton';
 
-// const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
-const SERVER_URL = 'http://192.168.1.57:3000/friends'; //school
+const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
+// const SERVER_URL = 'http://192.168.1.57:3000/friends'; //school
 
 export default function HomeScreen() {
     const navigation = useNavigation();
@@ -15,7 +16,6 @@ export default function HomeScreen() {
         fetch(SERVER_URL)
             .then(response => response.json())
             .then(result => {
-                console.log(result[0].id, result[0].name)
                 setFriends(result)
             })
     }, []);
@@ -31,7 +31,7 @@ export default function HomeScreen() {
                     </View>
                 ))}
             </ScrollView>
-            <Button onPress={() => navigation.navigate('AddFriendPage')} title='Add your friends' />
+            <StyledButton onPress={() => navigation.navigate('AddFriendPage')} title='Add your friends' primary={true}/>
             <StatusBar style="auto" />
         </SafeAreaView>
     );

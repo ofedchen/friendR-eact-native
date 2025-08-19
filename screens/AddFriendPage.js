@@ -1,18 +1,18 @@
 /*
 [x] check how to save picture to json - as uri and use as source
-[] change buttons to Pressable and style them and make into components
-[] navigate to homescreen after saving
-[] move wishlist to friend page
+[x] change buttons to Pressable and style them and make into components
+[x] navigate to homescreen after saving
+[] move wishlist to friend page?
 [] add required to input
-[] make picture round?
 [] check the labels
 */
 
 import { useState } from "react";
-import { ActivityIndicator, Alert, Button, Image, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
+import { ActivityIndicator, Alert, Image, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "@react-navigation/native";
+import StyledButton from "../components/StyledButton";
 
 // const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
 const SERVER_URL = 'http://192.168.1.57:3000/friends'; //school
@@ -123,7 +123,7 @@ export default function AddFriendPage() {
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardAvoidingView} keyboardVerticalOffset={80}>
                 <ScrollView contentContainerStyle={styles.form}>
                     {image && <Image source={{ uri: image }} style={styles.image} />}
-                    <Button title={image ? "Change image" : "Pick an image from camera roll"} onPress={pickImage} />
+                    <StyledButton iconName="camera" title={image ? "Change image" : "Pick an image from camera roll"} onPress={pickImage} primary={false} />
                     <Text accessibilityLabel="Label for Friend Name" style={styles.h3}>Name</Text>
                     <TextInput
                         style={styles.input}
@@ -140,7 +140,7 @@ export default function AddFriendPage() {
                     />
                     <Text accessibilityLabel="Label for Birthday" style={styles.h3}>Birthday</Text>
                     {birthday && <Text style={styles.text}>selected: {birthday ? birthday.toLocaleDateString("en-GB") : ""}</Text>}
-                    <Button onPress={showDatepicker} title={birthday ? "Change" : "Show date picker!"} />
+                    <StyledButton onPress={showDatepicker} title={birthday ? "Change" : "Show date picker!"} primary={false} />
 
                     {show && (
                         <DateTimePicker
@@ -161,15 +161,12 @@ export default function AddFriendPage() {
                             placeholderTextColor="#fff"
                         />
                     </TouchableWithoutFeedback>
-                    <Button title="Add to wishlist" onPress={addWishlistItem} />
+                    <StyledButton title="Add to wishlist" onPress={addWishlistItem} primary={false} />
                     {wishlist && wishlist.map(item => <Text key={item} style={styles.wishlist}>{item}</Text>)}
                     {loading ? (
                         <ActivityIndicator size="large" color="#c65fcfff" style={{ margin: 10 }} />
                     ) : (
-                        <View style={styles.saveButton}>
-                            {/* style={styles[primary ? "saveButton" : "whatever"]} */}
-                            <Button title="Save Friend" onPress={saveFriend} color="#1a0966ff" />
-                        </View>
+                        <StyledButton primary={true} title="Save friend" onPress={saveFriend} />
                     )}
                 </ScrollView>
             </KeyboardAvoidingView>
@@ -236,12 +233,5 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
         width: '100%',
         maxWidth: 320,
-    },
-    saveButton: {
-        marginVertical: 10,
-        width: '100%',
-        maxWidth: 320,
-        borderRadius: 8,
-        overflow: 'hidden',
-    },
+    }
 });

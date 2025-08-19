@@ -2,6 +2,7 @@ import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen'
 import AddFriendPage from './screens/AddFriendPage';
+import { PaperProvider } from 'react-native-paper';
 
 const RootStack = createNativeStackNavigator({
   screens: {
@@ -19,6 +20,10 @@ const RootStack = createNativeStackNavigator({
 const Navigation = createStaticNavigation(RootStack);
 
 export default function App() {
-  return <Navigation />;
+  return (
+    <PaperProvider>
+      <Navigation />;
+    </PaperProvider>
+  )
 }
 

@@ -13,6 +13,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "@react-navigation/native";
 import { Divider } from "react-native-paper";
+import { MaterialDesignIcons } from "@react-native-vector-icons/material-design-icons"
 import StyledButton from "../components/StyledButton";
 
 const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
@@ -165,7 +166,7 @@ export default function AddFriendPage() {
                         />
                     </TouchableWithoutFeedback>
                     <StyledButton title="Add to wishlist" onPress={addWishlistItem} primary={false} />
-                    {wishlist && wishlist.map(item => (<View key={item} style={styles.wishlist}><Text>{item}</Text><Divider /></View>))}
+                    {wishlist && wishlist.map(item => (<View key={item} style={styles.wishlist}><Text style={{padding: 4}}>{item}</Text><MaterialDesignIcons name="delete-outline" color="#0b0952ff" size={18} style={{ padding: 4 }} onPress={() => { setWishlist(wishlist.filter(i => i !== item)) }} /><Divider /></View>))}
                     {loading ? (
                         <ActivityIndicator size="large" color="#c65fcfff" style={{ margin: 10 }} />
                     ) : (
@@ -225,14 +226,16 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     wishlist: {
-        // color: "#1e5270ff",
-        fontSize: 16,
-        // backgroundColor: "#d4e7f3ff",
-        padding: 8,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignContent: 'center',
+        justifyContent: 'space-between',
+        fontSize: 18,
+        padding: 6,
         borderRadius: 6,
         marginVertical: 4,
         alignSelf: 'flex-start',
         width: '100%',
-        maxWidth: 320,
+        maxWidth: 360,
     }
 });

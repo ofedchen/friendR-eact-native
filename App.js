@@ -4,6 +4,15 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import HomeScreen from './screens/HomeScreen'
 import AddFriendPage from './screens/AddFriendPage';
 import FriendScreen from './screens/FriendScreen';
+import * as SplashScreen from 'expo-splash-screen';
+
+// splashscreen
+SplashScreen.setOptions({
+  duration: 1000,
+  fade: true,
+});
+
+// SplashScreen.preventAutoHideAsync();
 
 const RootStack = createNativeStackNavigator({
   screens: {

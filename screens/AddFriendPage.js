@@ -167,7 +167,7 @@ export default function AddFriendPage() {
                     <StyledButton title="Add to wishlist" onPress={addWishlistItem} primary={false} />
                     {wishlist && wishlist.map(item => (<View key={item} style={styles.wishlist}><Text style={{padding: 4}}>{item}</Text><MaterialDesignIcons name="delete-outline" color="#0b0952ff" size={18} style={{ padding: 4 }} onPress={() => { setWishlist(wishlist.filter(i => i !== item)) }} /></View>))}
                     {loading ? (
-                        <ActivityIndicator size="large" color="#c65fcfff" style={{ margin: 10 }} />
+                        <ActivityIndicator size="large" color="#D3D3D3" style={{ margin: 10 }} />
                     ) : (
                         <StyledButton primary={true} title="Save friend" onPress={saveFriend} />
                     )}

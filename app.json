@@ -32,6 +32,18 @@
         {
           "photosPermission": "The app accesses your photos to let you upload them to the app."
         }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#1A0966",
+          "image": "./assets/icon.png",
+          "dark": {
+            "image": "./assets/icon.png",
+            "backgroundColor": "#1A0966"
+          },
+          "imageWidth": 200
+        }
       ]
     ]
   }

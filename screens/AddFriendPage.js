@@ -12,7 +12,6 @@ import { ActivityIndicator, Alert, Image, Keyboard, KeyboardAvoidingView, Platfo
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "@react-navigation/native";
-import { Divider } from "react-native-paper";
 import { MaterialDesignIcons } from "@react-native-vector-icons/material-design-icons"
 import StyledButton from "../components/StyledButton";
 
@@ -166,7 +165,7 @@ export default function AddFriendPage() {
                         />
                     </TouchableWithoutFeedback>
                     <StyledButton title="Add to wishlist" onPress={addWishlistItem} primary={false} />
-                    {wishlist && wishlist.map(item => (<View key={item} style={styles.wishlist}><Text style={{padding: 4}}>{item}</Text><MaterialDesignIcons name="delete-outline" color="#0b0952ff" size={18} style={{ padding: 4 }} onPress={() => { setWishlist(wishlist.filter(i => i !== item)) }} /><Divider /></View>))}
+                    {wishlist && wishlist.map(item => (<View key={item} style={styles.wishlist}><Text style={{padding: 4}}>{item}</Text><MaterialDesignIcons name="delete-outline" color="#0b0952ff" size={18} style={{ padding: 4 }} onPress={() => { setWishlist(wishlist.filter(i => i !== item)) }} /></View>))}
                     {loading ? (
                         <ActivityIndicator size="large" color="#c65fcfff" style={{ margin: 10 }} />
                     ) : (

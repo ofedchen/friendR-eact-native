@@ -13,7 +13,7 @@ export default function StyledButton({ primary, title, onPress, iconName }) {
 const styles = StyleSheet.create({
     saveButton: {
         marginVertical: 10,
-        backgroundColor: '#1A0966',  // Dark royal blue for primary button
+        backgroundColor: '#1A0966', 
         borderRadius: 8,
         paddingVertical: 12,
         paddingHorizontal: 20,
@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
         shadowRadius: 3.5,
     },
     secondary: {
-        borderColor: '#1A0966',  // Royal blue border for secondary button
-        borderWidth: 1,           // Thinner border for subtle look
+        borderColor: '#1A0966',
+        borderWidth: 1,
         borderRadius: 8,
         paddingVertical: 12,
         paddingHorizontal: 20,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     },
 
     secondaryButtonText: {
-        color: '#1A0966',  // Royal blue text for secondary button
+        color: '#1A0966',
         fontSize: 18,
         fontWeight: 'bold',
     },

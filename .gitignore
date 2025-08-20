@@ -36,4 +36,4 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-ideas.md
+./ideas.md

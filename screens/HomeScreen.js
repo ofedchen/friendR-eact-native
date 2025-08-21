@@ -1,9 +1,18 @@
+/* 
+    [] add StartScreen to imitate splash screen
+    [] add Actions section - add your friends birthdays to calendar
+    [] change background under slider
+    [] make slider more explicit?
+    [] change Alert to Toast 
+*/
+
 import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faShip } from '@fortawesome/free-solid-svg-icons';
+import * as Calendar from 'expo-calendar';
 import StyledButton from '../components/StyledButton';
 
 const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
@@ -21,6 +30,72 @@ export default function HomeScreen() {
                 setFriends(result)
             })
     }, []);
+
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await Calendar.requestCalendarPermissionsAsync();
+            if (status === 'granted') {
+                const calendars = await Calendar.getCalendarsAsync(
+                    Calendar.EntityTypes.EVENT
+                );
+                console.log('Here are all your calendars:');
+                console.log({ calendars });
+            }
+        })();
+    }, []);
+
+    async function getDefaultCalendar() {
+        const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+        const defaultCalendar = calendars.find(
+            (cal) => cal.isPrimary || cal.accessLevel >= Calendar.CalendarAccessLevel.MODIFY
+        );
+
+        if (!defaultCalendar) {
+            Alert.alert('Error', 'Could not find a suitable calendar to add events to.');
+            return;
+        }
+
+        return defaultCalendar;
+    }
+
+
+    const addBirthdays = async () => {
+        try {
+            const defaultCalendar = await getDefaultCalendar();
+            console.log('Using calendar with ID:', defaultCalendar.id, 'and title:', defaultCalendar.title);
+            const minutesInAWeek = 7 * 24 * 60; 
+
+            for (let friend of friends) {
+                const birthdayString = Date.now().getFullYear().toString() + friend.birthday.slice(4)
+                const birthdayCurrentYear = new Date(birthdayString)
+                await Calendar.createEventInCalendarAsync(defaultCalendar.id, {
+                    startDate: birthdayCurrentYear,
+                    endDate: birthdayCurrentYear,
+                    allDay: true,
+                    title: 'Happy Birthday to ' + friend.name,
+                    recurrenceRule: {
+                        frequency: Calendar.Frequency.YEARLY,
+                        interval: 1,
+                    },
+                    alarms: [
+                        {
+                            relativeOffset: -minutesInAWeek,
+                            method: Calendar.AlarmMethod.ALERT,
+                        },
+                        {
+                            relativeOffset: 0,
+                            method: Calendar.AlarmMethod.ALERT,
+                        },
+                    ],
+                });
+                console.log(`Event created for ${friend.name}`);
+            }
+            Alert.alert('All birthday events have been created!');
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container} >
@@ -45,6 +120,7 @@ export default function HomeScreen() {
             <View style={styles.buttonContainer}>
                 <StyledButton onPress={() => navigation.navigate('AddFriendPage')} title='Add your friends' primary={true} />
             </View>
+            <StyledButton onPress={addBirthdays} title='Add birthdays to calendar' primary={false} />
             <StatusBar style="auto" />
         </SafeAreaView>
     );

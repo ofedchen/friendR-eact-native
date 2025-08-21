@@ -1,7 +1,14 @@
+/* 
+[] add wishlist PATCH request
+[] add editing for address, picture or remove unnecessary code
+[] reminder off/on icon for birthday and onPress to add to calendar and set reminder
+
+*/
+
 import { useNavigation } from "@react-navigation/native";
 import { ActivityIndicator, Alert, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import * as ImagePicker from 'expo-image-picker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+// import * as ImagePicker from 'expo-image-picker';
 import { MaterialDesignIcons } from "@react-native-vector-icons/material-design-icons"
 import StyledButton from "../components/StyledButton";
 import { useEffect, useState } from "react";
@@ -10,7 +17,7 @@ const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
 // const SERVER_URL = 'http://192.168.1.57:3000/friends'; //school
 
 export default function FriendScreen({ route }) {
-    const navigation = useNavigation();
+    // const navigation = useNavigation();
     const { itemId, friendName } = route.params;
 
     const [friendDetails, setFriendDetails] = useState('');
@@ -42,6 +49,8 @@ export default function FriendScreen({ route }) {
             setWishlistItem('')
         }
     }
+
+
     if (!friendDetails) {
         return (
             <SafeAreaView style={styles.loadingContainer}>

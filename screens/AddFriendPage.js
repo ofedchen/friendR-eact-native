@@ -71,6 +71,8 @@ export default function AddFriendPage() {
             name: friendName,
             address,
             birthday: birthday.toISOString(),
+            reminderSet: false,
+            wishlist: [],
             image: imageBase64
         }
 

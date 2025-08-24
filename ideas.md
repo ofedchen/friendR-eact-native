@@ -1,5 +1,7 @@
 ---
 
+npx json-server --watch db.json --port 3000
+
 ### 6. Mood Tracker App
 
 **Core Features (G-level):**

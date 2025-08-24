@@ -1,18 +1,9 @@
-/* 
-    [] add a placeholder if no friends added
-    [] add Actions section - add your friends birthdays to calendar
-    [] change background under slider
-    [] change Alert to Toast 
-    [] make slider more explicit?
-    [] add StartScreen to imitate splash screen?
-*/
-
 import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, Alert, Image, Platform, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Image, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faShip } from "@fortawesome/free-solid-svg-icons";
+import { faShip, faCakeCandles } from "@fortawesome/free-solid-svg-icons";
 import * as Calendar from "expo-calendar";
 import StyledButton from "../components/StyledButton";
 
@@ -23,7 +14,7 @@ export default function HomeScreen() {
     const navigation = useNavigation();
     const [friends, setFriends] = useState([]);
     const [loading, setLoading] = useState(false)
-
+    const remindersNotSet = friends.some(f => !f.reminderSet)
 
     useEffect(() => {
         setLoading(true);
@@ -67,42 +58,56 @@ export default function HomeScreen() {
         return defaultCalendar;
     }
 
-
     const addBirthdays = async () => {
         try {
             const defaultCalendar = await getDefaultCalendar();
             console.log("Using calendar with ID:", defaultCalendar.id, "and title:", defaultCalendar.title);
             const minutesInAWeek = 7 * 24 * 60;
+            const updatedFriends = [...friends]
 
             for (let friend of friends) {
-                const friendBirthday = new Date(friend.birthday);
-                const currentYear = new Date().getFullYear();
-                const birthdayCurrentYear = new Date(currentYear, friendBirthday.getMonth(), friendBirthday.getDate());
-                console.log(birthdayCurrentYear)
+                if (!friend.reminderSet) {
+                    const friendBirthday = new Date(friend.birthday);
+                    const currentYear = new Date().getFullYear();
+                    const birthdayCurrentYear = new Date(currentYear, friendBirthday.getMonth(), friendBirthday.getDate(), 10, 0, 0, 0);
 
-                await Calendar.createEventAsync(defaultCalendar.id, {
-                    startDate: birthdayCurrentYear,
-                    endDate: birthdayCurrentYear,
-                    // allDay: true,
-                    title: "Happy Birthday to " + friend.name,
-                    recurrenceRule: {
-                        frequency: Calendar.Frequency.YEARLY,
-                        interval: 1,
-                    },
-                    alarms: [
-                        {
-                            relativeOffset: -minutesInAWeek,
-                            method: Calendar.AlarmMethod.ALERT,
+                    await Calendar.createEventAsync(defaultCalendar.id, {
+                        startDate: birthdayCurrentYear,
+                        endDate: birthdayCurrentYear,
+                        title: "Happy Birthday to " + friend.name,
+                        recurrenceRule: {
+                            frequency: Calendar.Frequency.YEARLY,
+                            interval: 1,
                         },
-                        {
-                            relativeOffset: 0,
-                            method: Calendar.AlarmMethod.ALERT,
-                        },
-                    ],
-                });
-                console.log(`Event created for ${friend.name}`); 
+                        alarms: [
+                            {
+                                relativeOffset: -minutesInAWeek,
+                                method: Calendar.AlarmMethod.ALERT,
+                            },
+                            {
+                                relativeOffset: 0,
+                                method: Calendar.AlarmMethod.ALERT,
+                            },
+                        ],
+                    });
+                    console.log(`Event created for ${friend.name}`);
 
+                    const response = await fetch(`${SERVER_URL}/${friend.id}`, {
+                        method: "PATCH",
+                        headers: { "Content-type": "application/json" },
+                        body: JSON.stringify({ reminderSet: true, })
+                    })
+
+                    if (response.ok) {
+                        const friendIndex = updatedFriends.findIndex(f => f.id === friend.id);
+                        if (friendIndex !== -1) {
+                            updatedFriends[friendIndex] = { ...updatedFriends[friendIndex], reminderSet: true };
+                        }
+                    }
+
+                }
             }
+            setFriends(updatedFriends);
             if (Platform.OS === "android")
                 ToastAndroid.show(`All birthday events have been created!`, ToastAndroid.SHORT);
             else
@@ -139,7 +144,10 @@ export default function HomeScreen() {
             <View style={styles.buttonContainer}>
                 <StyledButton onPress={() => navigation.navigate("AddFriendPage")} title="Add your friends" primary={true} />
             </View>
-            {!loading && <StyledButton onPress={addBirthdays} title="Add birthdays to calendar" primary={false} />}
+            {(!loading && remindersNotSet) && <Pressable onPressOut={addBirthdays} style={styles.actions}>
+                <Text>Add your friends birthdays to calendar</Text>
+                <FontAwesomeIcon icon={faCakeCandles} />
+            </Pressable>}
             <StatusBar style="auto" />
         </SafeAreaView>
     );
@@ -213,4 +221,14 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginBottom: 30,
     },
+    actions: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        alignSelf: "center",
+        width: 300,
+        height: 100,
+        backgroundColor: "#B4CCB9",
+        padding: 20
+    }
 });

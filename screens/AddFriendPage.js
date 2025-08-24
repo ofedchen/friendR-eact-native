@@ -99,7 +99,10 @@ export default function AddFriendPage() {
             }
 
         } catch (error) {
-            Alert.alert("Error: ", error.message);
+            if (Platform.OS === "android")
+                ToastAndroid.show(`Error: ${error.message}`, ToastAndroid.SHORT);
+            else
+                Alert.alert("Error: ", error.message);
         } finally {
             setLoading(false);
             navigation.navigate("Home")
@@ -192,7 +195,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     text: {
-        // color: "#444",
         marginBottom: 8,
         alignSelf: "flex-start",
     },

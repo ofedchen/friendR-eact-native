@@ -9,7 +9,7 @@
 
 import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Image, Platform, SafeAreaView, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faShip } from "@fortawesome/free-solid-svg-icons";
@@ -57,7 +57,10 @@ export default function HomeScreen() {
         console.log(defaultCalendar)
 
         if (!defaultCalendar) {
-            Alert.alert("Error", "Could not find a suitable calendar to add events to.");
+            if (Platform.OS === "android")
+                ToastAndroid.show(`Error: Could not find a suitable calendar to add events to.`, ToastAndroid.SHORT);
+            else
+                Alert.alert("Error", "Could not find a suitable calendar to add events to.");
             return;
         }
 
@@ -70,8 +73,6 @@ export default function HomeScreen() {
             const defaultCalendar = await getDefaultCalendar();
             console.log("Using calendar with ID:", defaultCalendar.id, "and title:", defaultCalendar.title);
             const minutesInAWeek = 7 * 24 * 60;
-
-            console.log(`Creating event`); //  ${friend.name}
 
             for (let friend of friends) {
                 const friendBirthday = new Date(friend.birthday);
@@ -99,10 +100,13 @@ export default function HomeScreen() {
                         },
                     ],
                 });
-                console.log(`Event created for`); //  ${friend.name}
+                console.log(`Event created for ${friend.name}`); 
 
             }
-            Alert.alert("All birthday events have been created!");
+            if (Platform.OS === "android")
+                ToastAndroid.show(`All birthday events have been created!`, ToastAndroid.SHORT);
+            else
+                Alert.alert("All birthday events have been created!");
         }
         catch (e) {
             console.log(e);

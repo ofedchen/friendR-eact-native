@@ -13,37 +13,37 @@ export default function StyledButton({ primary, title, onPress, iconName }) {
 const styles = StyleSheet.create({
     saveButton: {
         marginVertical: 10,
-        backgroundColor: '#1A0966', 
+        backgroundColor: "#1A0966", 
         borderRadius: 8,
         paddingVertical: 12,
         paddingHorizontal: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         elevation: 3,  // For Android shadow effect
-        shadowColor: '#000',  // For iOS shadow effect
+        shadowColor: "#000",  // For iOS shadow effect
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.5,
     },
     secondary: {
-        borderColor: '#1A0966',
+        borderColor: "#1A0966",
         borderWidth: 1,
         borderRadius: 8,
         paddingVertical: 12,
         paddingHorizontal: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
     },
 
     buttonText: {
-        color: 'white',
+        color: "white",
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: "bold",
     },
 
     secondaryButtonText: {
-        color: '#1A0966',
+        color: "#1A0966",
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: "bold",
     },
 })

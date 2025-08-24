@@ -7,17 +7,17 @@
     [] add StartScreen to imitate splash screen?
 */
 
-import { useState, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { ActivityIndicator, Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faShip } from '@fortawesome/free-solid-svg-icons';
-import * as Calendar from 'expo-calendar';
-import StyledButton from '../components/StyledButton';
+import { useState, useEffect } from "react";
+import { StatusBar } from "expo-status-bar";
+import { ActivityIndicator, Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faShip } from "@fortawesome/free-solid-svg-icons";
+import * as Calendar from "expo-calendar";
+import StyledButton from "../components/StyledButton";
 
-const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
-// const SERVER_URL = 'http://192.168.1.57:3000/friends'; //school
+const SERVER_URL = "http://192.168.1.134:3000/friends"; //home
+// const SERVER_URL = "http://192.168.1.57:3000/friends"; //school
 
 export default function HomeScreen() {
     const navigation = useNavigation();
@@ -39,11 +39,11 @@ export default function HomeScreen() {
     useEffect(() => {
         (async () => {
             const { status } = await Calendar.requestCalendarPermissionsAsync();
-            if (status === 'granted') {
+            if (status === "granted") {
                 const calendars = await Calendar.getCalendarsAsync(
                     Calendar.EntityTypes.EVENT
                 );
-                console.log('Here are all your calendars:');
+                console.log("Here are all your calendars:");
                 console.log({ calendars });
             }
         })();
@@ -57,7 +57,7 @@ export default function HomeScreen() {
         console.log(defaultCalendar)
 
         if (!defaultCalendar) {
-            Alert.alert('Error', 'Could not find a suitable calendar to add events to.');
+            Alert.alert("Error", "Could not find a suitable calendar to add events to.");
             return;
         }
 
@@ -68,7 +68,7 @@ export default function HomeScreen() {
     const addBirthdays = async () => {
         try {
             const defaultCalendar = await getDefaultCalendar();
-            console.log('Using calendar with ID:', defaultCalendar.id, 'and title:', defaultCalendar.title);
+            console.log("Using calendar with ID:", defaultCalendar.id, "and title:", defaultCalendar.title);
             const minutesInAWeek = 7 * 24 * 60;
 
             console.log(`Creating event`); //  ${friend.name}
@@ -83,7 +83,7 @@ export default function HomeScreen() {
                     startDate: birthdayCurrentYear,
                     endDate: birthdayCurrentYear,
                     // allDay: true,
-                    title: 'Happy Birthday to ' + friend.name,
+                    title: "Happy Birthday to " + friend.name,
                     recurrenceRule: {
                         frequency: Calendar.Frequency.YEARLY,
                         interval: 1,
@@ -102,7 +102,7 @@ export default function HomeScreen() {
                 console.log(`Event created for`); //  ${friend.name}
 
             }
-            Alert.alert('All birthday events have been created!');
+            Alert.alert("All birthday events have been created!");
         }
         catch (e) {
             console.log(e);
@@ -119,10 +119,10 @@ export default function HomeScreen() {
                 {loading ? (
                     <ActivityIndicator size="large" color="#D3D3D3" style={{ margin: 10 }} />
                 ) :
-                    <Text style={styles.h2}>{friends.length > 0 ? 'Your added friends:' : "You haven't added any friends yet!"}</Text>}
+                    <Text style={styles.h2}>{friends.length > 0 ? "Your added friends:" : "You haven't added any friends yet!"}</Text>}
                 <ScrollView horizontal showsHorizontalScrollIndicator={true} contentContainerStyle={styles.friendsListContainer}>
                     {friends.map((item) => (
-                        <TouchableOpacity key={item.id} style={styles.friendCard} onPress={() => navigation.navigate('FriendScreen', {
+                        <TouchableOpacity key={item.id} style={styles.friendCard} onPress={() => navigation.navigate("FriendScreen", {
                             itemId: item.id,
                             friendName: item.name,
                         })}>
@@ -133,9 +133,9 @@ export default function HomeScreen() {
                 </ScrollView>
             </View>
             <View style={styles.buttonContainer}>
-                <StyledButton onPress={() => navigation.navigate('AddFriendPage')} title='Add your friends' primary={true} />
+                <StyledButton onPress={() => navigation.navigate("AddFriendPage")} title="Add your friends" primary={true} />
             </View>
-            {!loading && <StyledButton onPress={addBirthdays} title='Add birthdays to calendar' primary={false} />}
+            {!loading && <StyledButton onPress={addBirthdays} title="Add birthdays to calendar" primary={false} />}
             <StatusBar style="auto" />
         </SafeAreaView>
     );
@@ -145,47 +145,47 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f8f8f8',
+        backgroundColor: "#f8f8f8",
         paddingTop: 25,
     },
     headerContainer: {
-        width: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         paddingVertical: 25,
-        backgroundColor: '#1A0966',
+        backgroundColor: "#1A0966",
     },
     h1: {
-        color: '#f8f8f8',
+        color: "#f8f8f8",
         fontSize: 32,
-        fontWeight: 'bold',
+        fontWeight: "bold",
     },
     contentContainer: {
         paddingVertical: 20,
     },
     h2: {
         fontSize: 24,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         marginLeft: 25,
         paddingVertical: 20,
     },
     friendsListContainer: {
         paddingHorizontal: 15,
         paddingVertical: 30,
-        alignItems: 'center',
+        alignItems: "center",
         paddingTop: 25,
     },
     friendCard: {
         width: 180,
         height: 220,
-        backgroundColor: '#fff',
+        backgroundColor: "#fff",
         borderRadius: 10,
         padding: 10,
         marginHorizontal: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        shadowColor: '#000',
+        alignItems: "center",
+        justifyContent: "center",
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -199,14 +199,14 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18,
-        fontWeight: '600',
-        color: '#333',
-        textAlign: 'center',
+        fontWeight: "600",
+        color: "#333",
+        textAlign: "center",
     },
     buttonContainer: {
         paddingBottom: 20,
-        width: '100%',
-        alignItems: 'center',
+        width: "100%",
+        alignItems: "center",
         marginBottom: 30,
     },
 });

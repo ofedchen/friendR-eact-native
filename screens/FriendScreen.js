@@ -90,17 +90,19 @@ export default function FriendScreen({ route }) {
                 <ScrollView contentContainerStyle={styles.scrollView}>
                     <Text style={styles.h2}>Details about your friend {friendDetails.name}</Text>
                     <Image source={{ uri: `data:image/png;base64,${friendDetails.image}` }} style={styles.image} />
-                    <Text accessibilityLabel="Label for Birthday" style={styles.h3}>Birthday</Text>
+                    <Text style={styles.h3}>Birthday</Text>
                     <View style={styles.birthday}>
-                        <Text style={styles.text}>{friendDetails.birthday ? (friendDetails.birthday).toLocaleDateString("en-GB") : ""}</Text>
-                        <Text style={{marginVertical: 8, color: friendDetails.reminderSet ? "green" : "darkgrey"}}>{friendDetails.reminderSet ? "Added to Calendar" : "Reminder not set"}</Text>
+                        <Text accessibilityLabel="Birthday" style={styles.text}>{friendDetails.birthday ? (friendDetails.birthday).toLocaleDateString("en-GB") : ""}</Text>
+                        <Text style={{ marginVertical: 8, color: friendDetails.reminderSet ? "green" : "darkgrey" }}>{friendDetails.reminderSet ? "Added to Calendar" : "Reminder not set"}</Text>
                     </View>
-                    <Text accessibilityLabel="Label for Address" style={styles.h3}>Address</Text>
+                    <Text style={styles.h3}>Address</Text>
                     <Text style={styles.text}>{friendDetails.address}</Text>
-                    <Text accessibilityLabel="Label for Wishlist items" style={styles.h3}>Wishlist</Text>
+                    <Text nativeID="wishlistInput" style={styles.h3}>Wishlist</Text>
                     {friendDetails.wishlist && friendDetails.wishlist.map(item => (<View key={item} style={styles.wishlist}><Text style={{ padding: 4 }}>{item}</Text><MaterialDesignIcons name="delete-outline" color="#0b0952ff" size={18} style={{ padding: 4 }} onPress={() => deleteFromWishlist(item)} /></View>))}
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <TextInput
+                            accessibilityLabel="Wishlist input field"
+                            accessibilityLabelledBy="wishlistInput"
                             style={styles.input}
                             onChangeText={setWishlistItem}
                             value={wishlistItem}
@@ -168,7 +170,7 @@ const styles = StyleSheet.create({
         alignSelf: "flex-start",
     },
     birthday: {
-        width: 240, 
+        width: 240,
         alignSelf: "flex-start",
         flexDirection: "row",
         justifyContent: "space-between"

@@ -125,16 +125,19 @@ export default function AddFriendPage() {
                         value={friendName}
                         placeholder="Anna"
                     />
-                    <Text accessibilityLabel="Label for Address" style={styles.h3}>Address</Text>
+                    <Text nativeID="addressLabel" style={styles.h3}>Address</Text>
                     <TextInput
+                        accessibilityLabel="Address Input Field"
+                        accessibilityLabelledBy="addressLabel"
                         style={styles.input}
                         onChangeText={setAddress}
                         value={address}
                         placeholder="Spain, Alicante, Calle Dr Sapena 4"
                     />
-                    <Text accessibilityLabel="Label for Birthday" style={styles.h3}>Birthday</Text>
+                    <Text nativeID="birthdayLabel" style={styles.h3}>Birthday</Text>
                     {birthday && <Text style={styles.text}>selected: {birthday ? birthday.toLocaleDateString("en-GB") : ""}</Text>}
-                    <StyledButton iconName="calendar-month" onPress={showDatepicker} title={birthday ? "Change date" : "Show date picker"} primary={false} />
+                    <StyledButton accessibilityLabel="Open Birthday Picker"
+                        accessibilityLabelledBy="birthdayLabel" iconName="calendar-month" onPress={showDatepicker} title={birthday ? "Change date" : "Show date picker"} primary={false} />
 
                     {show && (
                         <DateTimePicker

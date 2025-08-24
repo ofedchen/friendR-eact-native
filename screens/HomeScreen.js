@@ -7,6 +7,7 @@ import { faShip, faCakeCandles } from "@fortawesome/free-solid-svg-icons";
 import * as Calendar from "expo-calendar";
 import StyledButton from "../components/StyledButton";
 
+// Jon, fylla i din IP och kör i terminalen: npx json-server --watch db.json --port 3000
 const SERVER_URL = "http://192.168.1.134:3000/friends"; //home
 // const SERVER_URL = "http://192.168.1.57:3000/friends"; //school
 

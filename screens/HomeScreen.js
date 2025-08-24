@@ -1,14 +1,15 @@
 /* 
-    [] add StartScreen to imitate splash screen
+    [] add a placeholder if no friends added
     [] add Actions section - add your friends birthdays to calendar
     [] change background under slider
-    [] make slider more explicit?
     [] change Alert to Toast 
+    [] make slider more explicit?
+    [] add StartScreen to imitate splash screen?
 */
 
 import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Alert, Image, Platform, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faShip } from '@fortawesome/free-solid-svg-icons';
@@ -21,13 +22,16 @@ const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
 export default function HomeScreen() {
     const navigation = useNavigation();
     const [friends, setFriends] = useState([]);
+    const [loading, setLoading] = useState(false)
 
 
     useEffect(() => {
+        setLoading(true);
         fetch(SERVER_URL)
             .then(response => response.json())
             .then(result => {
                 setFriends(result)
+                setLoading(false)
             })
     }, []);
 
@@ -50,6 +54,7 @@ export default function HomeScreen() {
         const defaultCalendar = calendars.find(
             (cal) => cal.isPrimary || cal.accessLevel >= Calendar.CalendarAccessLevel.MODIFY
         );
+        console.log(defaultCalendar)
 
         if (!defaultCalendar) {
             Alert.alert('Error', 'Could not find a suitable calendar to add events to.');
@@ -64,15 +69,20 @@ export default function HomeScreen() {
         try {
             const defaultCalendar = await getDefaultCalendar();
             console.log('Using calendar with ID:', defaultCalendar.id, 'and title:', defaultCalendar.title);
-            const minutesInAWeek = 7 * 24 * 60; 
+            const minutesInAWeek = 7 * 24 * 60;
+
+            console.log(`Creating event`); //  ${friend.name}
 
             for (let friend of friends) {
-                const birthdayString = Date.now().getFullYear().toString() + friend.birthday.slice(4)
-                const birthdayCurrentYear = new Date(birthdayString)
-                await Calendar.createEventInCalendarAsync(defaultCalendar.id, {
+                const friendBirthday = new Date(friend.birthday);
+                const currentYear = new Date().getFullYear();
+                const birthdayCurrentYear = new Date(currentYear, friendBirthday.getMonth(), friendBirthday.getDate());
+                console.log(birthdayCurrentYear)
+
+                await Calendar.createEventAsync(defaultCalendar.id, {
                     startDate: birthdayCurrentYear,
                     endDate: birthdayCurrentYear,
-                    allDay: true,
+                    // allDay: true,
                     title: 'Happy Birthday to ' + friend.name,
                     recurrenceRule: {
                         frequency: Calendar.Frequency.YEARLY,
@@ -89,10 +99,12 @@ export default function HomeScreen() {
                         },
                     ],
                 });
-                console.log(`Event created for ${friend.name}`);
+                console.log(`Event created for`); //  ${friend.name}
+
             }
             Alert.alert('All birthday events have been created!');
-        } catch (e) {
+        }
+        catch (e) {
             console.log(e);
         }
     };
@@ -104,7 +116,10 @@ export default function HomeScreen() {
                 <FontAwesomeIcon icon={faShip} size={32} color="#f8f8f8" style={styles.icon} />
             </View>
             <View style={styles.contentContainer}>
-                <Text style={styles.h2}>{friends.length > 0 ? 'Your added friends:' : "You haven't added any friends yet!"}</Text>
+                {loading ? (
+                    <ActivityIndicator size="large" color="#D3D3D3" style={{ margin: 10 }} />
+                ) :
+                    <Text style={styles.h2}>{friends.length > 0 ? 'Your added friends:' : "You haven't added any friends yet!"}</Text>}
                 <ScrollView horizontal showsHorizontalScrollIndicator={true} contentContainerStyle={styles.friendsListContainer}>
                     {friends.map((item) => (
                         <TouchableOpacity key={item.id} style={styles.friendCard} onPress={() => navigation.navigate('FriendScreen', {
@@ -120,7 +135,7 @@ export default function HomeScreen() {
             <View style={styles.buttonContainer}>
                 <StyledButton onPress={() => navigation.navigate('AddFriendPage')} title='Add your friends' primary={true} />
             </View>
-            <StyledButton onPress={addBirthdays} title='Add birthdays to calendar' primary={false} />
+            {!loading && <StyledButton onPress={addBirthdays} title='Add birthdays to calendar' primary={false} />}
             <StatusBar style="auto" />
         </SafeAreaView>
     );

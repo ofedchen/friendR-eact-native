@@ -17,10 +17,10 @@ const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
 // const SERVER_URL = 'http://192.168.1.57:3000/friends'; //school
 
 export default function FriendScreen({ route }) {
-    // const navigation = useNavigation();
+    const navigation = useNavigation();
     const { itemId, friendName } = route.params;
 
-    const [friendDetails, setFriendDetails] = useState('');
+    const [friendDetails, setFriendDetails] = useState(null);
     // const [address, setAddress] = useState(null);
     // const [mode, setMode] = useState('date');
     // const [show, setShow] = useState(false);
@@ -34,11 +34,11 @@ export default function FriendScreen({ route }) {
         fetch(SERVER_URL)
             .then(response => response.json())
             .then(result => {
-                const foundFriend = result.find(e => e.id === itemId);
+                const foundFriend = result.find(f => f.id === itemId);
+                setFriendDetails(foundFriend);
                 if (foundFriend && foundFriend.birthday) {
                     foundFriend.birthday = new Date(foundFriend.birthday);
                 }
-                setFriendDetails(foundFriend);
             })
     }, []);
 
@@ -50,6 +50,49 @@ export default function FriendScreen({ route }) {
         }
     }
 
+        //saving to db
+       /* const saveFriend = async () => {
+            if (!friendName || !address || !birthday) {
+                Alert.alert("Please fill all fields and pick an image.");
+                return;
+            }
+    
+            setLoading(true);
+    
+            const friendData = {
+                name: friendName,
+                address,
+                birthday: birthday.toISOString(),
+                wishlist,
+                image: imageBase64
+            }
+    
+            try {
+                const response = await fetch(SERVER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-type': 'application/json' },
+                    body: JSON.stringify(friendData)
+                })
+    
+                if (response.ok) {
+                    Alert.alert("Friend saved!");
+                    setFriendName(null);
+                    setAddress(null);
+                    setBirthday(null);
+                    setImage(null);
+                    setImageBase64(null);
+                    setWishlist([])
+                } else {
+                    Alert.alert("Failed to save friend.");
+                }
+    
+            } catch (error) {
+                Alert.alert("Error: ", error.message);
+            } finally {
+                setLoading(false);
+                navigation.navigate('Home')
+            }
+        } */
 
     if (!friendDetails) {
         return (
@@ -62,7 +105,7 @@ export default function FriendScreen({ route }) {
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardAvoidingView} keyboardVerticalOffset={80}>
-                <ScrollView contentContainerStyle={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <ScrollView contentContainerStyle={styles.scrollView}>
                     <Text style={styles.h2}>Details about your friend {friendDetails.name}</Text>
                     <Image source={{ uri: `data:image/png;base64,${friendDetails.image}` }} style={styles.image} />
                     <Text accessibilityLabel="Label for Birthday" style={styles.h3}>Birthday</Text>
@@ -104,15 +147,17 @@ const styles = StyleSheet.create({
         // backgroundColor: '#f5f6fa',
     },
     keyboardAvoidingView: {
-        flex: 1
+        paddingVertical: 10
     },
     scrollView: {
         flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     h2: {
         fontSize: 24,
         fontWeight: 'bold',
-        paddingVertical: 20,
+        paddingVertical: 10,
     },
     image: {
         width: 220,

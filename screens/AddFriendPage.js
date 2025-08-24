@@ -15,8 +15,8 @@ import { useNavigation } from "@react-navigation/native";
 import { MaterialDesignIcons } from "@react-native-vector-icons/material-design-icons"
 import StyledButton from "../components/StyledButton";
 
-const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
-// const SERVER_URL = 'http://192.168.1.57:3000/friends'; //school
+// const SERVER_URL = 'http://192.168.1.134:3000/friends'; //home
+const SERVER_URL = 'http://192.168.1.57:3000/friends'; //school
 
 
 export default function AddFriendPage() {
@@ -154,7 +154,7 @@ export default function AddFriendPage() {
                             onChange={onChange}
                         />
                     )}
-                    <Text accessibilityLabel="Label for Wishlist items" style={styles.h3}>Wishlist</Text>
+                    {/* <Text accessibilityLabel="Label for Wishlist items" style={styles.h3}>Wishlist</Text>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <TextInput
                             style={styles.input}
@@ -163,9 +163,9 @@ export default function AddFriendPage() {
                             placeholder="Kiehl's moisturizer"
                         // placeholderTextColor="#fff"
                         />
-                    </TouchableWithoutFeedback>
-                    <StyledButton title="Add to wishlist" onPress={addWishlistItem} primary={false} />
-                    {wishlist && wishlist.map(item => (<View key={item} style={styles.wishlist}><Text style={{padding: 4}}>{item}</Text><MaterialDesignIcons name="delete-outline" color="#0b0952ff" size={18} style={{ padding: 4 }} onPress={() => { setWishlist(wishlist.filter(i => i !== item)) }} /></View>))}
+                    </TouchableWithoutFeedback> */}
+                   {/* <StyledButton title="Add to wishlist" onPress={addWishlistItem} primary={false} /> */}
+                    {/* {wishlist && wishlist.map(item => (<View key={item} style={styles.wishlist}><Text style={{padding: 4}}>{item}</Text><MaterialDesignIcons name="delete-outline" color="#0b0952ff" size={18} style={{ padding: 4 }} onPress={() => { setWishlist(wishlist.filter(i => i !== item)) }} /></View>))} */}
                     {loading ? (
                         <ActivityIndicator size="large" color="#D3D3D3" style={{ margin: 10 }} />
                     ) : (
